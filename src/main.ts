@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import mongoose from 'mongoose';
-import { CustomFilter } from './error/error.filter';
+import { CustomFilter } from './exception/exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

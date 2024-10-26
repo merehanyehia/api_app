@@ -13,7 +13,7 @@ import {
 } from './models/invited_users.model';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { CustomFilter } from 'src/error/error.filter';
+import { CustomFilter } from 'src/exception/exception.filter';
 
 @Module({
   controllers: [OrganizationController],
