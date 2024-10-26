@@ -7,8 +7,8 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Observable } from 'rxjs';
-import { Organization } from 'src/organization/models/organization.model';
-import { Organization_members } from 'src/organization/models/organization_members.model';
+import { Organization } from '../organization/models/organization.model';
+import { Organization_members } from '../organization/models/organization_members.model';
 
 @Injectable()
 export class RoleAuthorizationGuard implements CanActivate {

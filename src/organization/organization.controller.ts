@@ -15,8 +15,8 @@ import {
 import { OrganizationDto } from './dto/organization.dto';
 import { OrganizationService } from './organization.service';
 import { Organization_membersDto } from './dto/organization_members.dto';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { RoleAuthorizationGuard } from 'src/guards/role-authorization.guard';
+import { AuthGuard } from '../guards/auth.guard';
+import { RoleAuthorizationGuard } from '../guards/role-authorization.guard';
 
 @Controller('organization')
 @UseGuards(AuthGuard, RoleAuthorizationGuard)
