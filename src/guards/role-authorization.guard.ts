@@ -32,7 +32,6 @@ export class RoleAuthorizationGuard implements CanActivate {
       if (!organization) {
         return true;
       }
-      console.log(members, organization);
 
       if (members.access_level === 'readonly') {
         if (request.path !== `/organization/${members.orgId}`) {
