@@ -8,14 +8,17 @@ import {
   Put,
   Req,
   Res,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { OrganizationDto } from './dto/organization.dto';
 import { OrganizationService } from './organization.service';
 import { UserInvitationDto } from './dto/userInvitation.dto';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('organization')
+@UseGuards(AuthGuard)
 export class OrganizationController {
   constructor(private organizationService: OrganizationService) {}
   @Post('/')

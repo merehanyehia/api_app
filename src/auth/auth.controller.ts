@@ -10,7 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { RefreshTokenDto, SignInDto, SignUpDto } from './dto/auth.dto';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(private authService: AuthService) {}
   @Post('/signup')
