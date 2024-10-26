@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { OrganizationModule } from './organization/organization.module';
 import { AuthModule } from './auth/auth.module';
+import { APP_PIPE } from '@nestjs/core';
+import { CustomFilter } from './error/error.filter';
 
 @Module({
   imports: [

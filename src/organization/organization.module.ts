@@ -11,8 +11,9 @@ import {
   Invited_users,
   Invited_usersSchema,
 } from './models/invited_users.model';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { CustomFilter } from 'src/error/error.filter';
 
 @Module({
   controllers: [OrganizationController],
