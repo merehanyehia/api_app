@@ -7,13 +7,6 @@ import {
   Organization_members,
   Organization_membersSchema,
 } from './models/organization_members.model';
-import {
-  Invited_users,
-  Invited_usersSchema,
-} from './models/invited_users.model';
-import { APP_GUARD, APP_PIPE } from '@nestjs/core';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { CustomFilter } from 'src/exception/exception.filter';
 
 @Module({
   controllers: [OrganizationController],
@@ -22,7 +15,6 @@ import { CustomFilter } from 'src/exception/exception.filter';
     MongooseModule.forFeature([
       { name: Organization.name, schema: organizationSchema },
       { name: Organization_members.name, schema: Organization_membersSchema },
-      { name: Invited_users.name, schema: Invited_usersSchema },
     ]),
   ],
 })

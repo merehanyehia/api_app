@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { OrganizationDto } from './dto/organization.dto';
 import { OrganizationService } from './organization.service';
-import { UserInvitationDto } from './dto/userInvitation.dto';
+import { Organization_membersDto } from './dto/organization_members.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('organization')
@@ -34,7 +34,11 @@ export class OrganizationController {
   }
   @Post('/:organizationId/invite')
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  async inviteUser(@Req() req, @Res() res, @Body() body: UserInvitationDto) {
+  async inviteUser(
+    @Req() req,
+    @Res() res,
+    @Body() body: Organization_membersDto,
+  ) {
     try {
       const organizationId = req.params.organizationId;
 
@@ -97,18 +101,6 @@ export class OrganizationController {
       const organizationData =
         await this.organizationService.deleteOrganization(organizationId);
       res.status(200).json(organizationData);
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  @Post('/member')
-  @UsePipes(new ValidationPipe({ whitelist: true }))
-  async addMember(@Req() req, @Res() res, @Body() body: any) {
-    try {
-      const organizationMember =
-        await this.organizationService.createOrganizationMember(body);
-      res.status(201).json(organizationMember);
     } catch (err) {
       throw err;
     }

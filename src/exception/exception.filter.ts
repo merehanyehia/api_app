@@ -10,7 +10,9 @@ export class CustomFilter implements ExceptionFilter {
     const status = exception.status ? exception.status : 500;
 
     return response.status(status).json({
-      message: exception.message,
+      message: exception.response?.message
+        ? exception.response.message
+        : exception.message,
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,

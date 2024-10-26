@@ -6,20 +6,18 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Organization } from './models/organization.model';
 import { Model } from 'mongoose';
-import { Organization_members } from './models/organization_members.model';
 import { OrganizationDto } from './dto/organization.dto';
-import { UserInvitationDto } from './dto/userInvitation.dto';
-import { Invited_users } from './models/invited_users.model';
+import { Organization_membersDto } from './dto/organization_members.dto';
+import { Organization_members } from './models/organization_members.model';
 
 @Injectable()
 export class OrganizationService {
   constructor(
     @InjectModel(Organization.name)
     private organizationModel: Model<Organization>,
+
     @InjectModel(Organization_members.name)
-    private organizationMembersModel: Model<Organization_members>,
-    @InjectModel(Invited_users.name)
-    private Invited_usersModel: Model<Invited_users>,
+    private Organization_membersModel: Model<Organization_members>,
   ) {}
   async createOrganization(orgData) {
     const { name, description } = orgData;
@@ -38,41 +36,17 @@ export class OrganizationService {
     return organization._id;
   }
 
-  async createOrganizationMember(memberData) {
-    const { name, email, access_level } = memberData;
-
-    const findMember = await this.organizationMembersModel.findOne({
-      email: email,
-    });
-
-    if (findMember !== null) {
-      throw new BadRequestException('Member already exists');
-    }
-    const organization = await this.organizationModel.findOne({
-      name: memberData.org_name,
-    });
-    if (!organization) {
-      throw new NotFoundException('Organization not found');
-    }
-    const member = await new this.organizationMembersModel({
-      name,
-      email,
-      access_level,
-      orgId: organization._id,
-    }).save();
-    return member;
-  }
   async getAllOrganizations() {
     const allOrgs = await this.organizationModel.find();
     if (allOrgs === null) {
       throw new NotFoundException('There are no organizations');
     }
-    const members = await this.organizationMembersModel.find();
+    const members = await this.Organization_membersModel.find();
 
     const organizations = await this.organizationModel.find();
     const organizationsWithMembers = await Promise.all(
       organizations.map(async (org) => {
-        const members = await this.organizationMembersModel.find({
+        const members = await this.Organization_membersModel.find({
           orgId: org._id,
         });
 
@@ -82,7 +56,7 @@ export class OrganizationService {
           description: org.description,
           organization_members: members.map((member) => ({
             name: member.name,
-            email: member.email,
+            email: member.user_email,
             access_level: member.access_level,
           })),
         };
@@ -97,7 +71,7 @@ export class OrganizationService {
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
-    const members = await this.organizationMembersModel.find({
+    const members = await this.Organization_membersModel.find({
       orgId: organization._id,
     });
 
@@ -107,7 +81,7 @@ export class OrganizationService {
       description: organization.description,
       organization_members: members.map((member) => ({
         name: member.name,
-        email: member.email,
+        email: member.user_email,
         access_level: member.access_level,
       })),
     };
@@ -148,7 +122,7 @@ export class OrganizationService {
       throw new NotFoundException('Organization not found');
     }
 
-    await this.organizationMembersModel.deleteMany({
+    await this.Organization_membersModel.deleteMany({
       orgId: organization._id,
     });
     await this.organizationModel.findByIdAndDelete(organizationId);
@@ -157,7 +131,7 @@ export class OrganizationService {
   }
 
   async createUserInvitation(
-    userData: UserInvitationDto,
+    userData: Organization_membersDto,
     organizationId: string,
   ) {
     const { user_email } = userData;
@@ -169,9 +143,21 @@ export class OrganizationService {
     if (findOrg === null) {
       throw new NotFoundException('organization does not exist');
     }
-    await new this.Invited_usersModel({
-      user_email,
+
+    const findMember = await this.Organization_membersModel.findOne({
       orgId: findOrg._id,
+    });
+
+    if (findMember !== null) {
+      throw new BadRequestException(
+        'this user already exists in the organization',
+      );
+    }
+    await new this.Organization_membersModel({
+      user_email: user_email,
+      name: userData.name ? userData.name : user_email,
+      orgId: findOrg._id,
+      access_level: 'readonly',
     }).save();
     return `user invited to ${findOrg.name} successfully`;
   }
