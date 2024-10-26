@@ -25,7 +25,6 @@ export class AuthGuard implements CanActivate {
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const decode = jwt.verify(token, key);
-      // const decode = jwt.decode(token);
       request.decodedToken = decode;
 
       return true;
